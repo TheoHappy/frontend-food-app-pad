@@ -1,0 +1,11 @@
+{
+  "name": "frontend-food-app-pad",
+  "addons": [
+    "logentries"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/gradle"
+    }
+  ]
+}
