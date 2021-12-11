@@ -3,7 +3,7 @@ server:
 eureka:
   client:
     serviceUrl:
-      defaultZone: ${EUREKA_HOST:http://discovery-service-food-app.herokuapp.com/eureka/}
+      defaultZone: ${EUREKA_HOST:https://discovery-service-food-app.herokuapp.com/eureka/}
   instance:
     instance-id: frontend-instance
 spring:
