@@ -27,7 +27,7 @@ public class FoodController {
     public static final String BACKEND_SERVICE_2 = "be-food-instance2.herokuapp.com";
 
     private final RestTemplate restTemplate;
-    private final LoadBalancerClient loadBalancer;
+//    private final LoadBalancerClient loadBalancer;
     @GetMapping()
     public ResponseEntity<String> test() {
         return new ResponseEntity<>("FrontEnd Page", HttpStatus.OK);}
@@ -36,14 +36,14 @@ public class FoodController {
     @Cacheable(value = "foodInfo")
     public ResponseEntity<List<FoodDTO>> getAll() throws InterruptedException {
 //        Thread.sleep(7000);
-        log.info("Request [GET] was executed on " + loadBalancer.choose("backend").getInstanceId());
+//        log.info("Request [GET] was executed on " + loadBalancer.choose("backend").getInstanceId());
         URI backendUrl = URI.create("https://" + BACKEND_SERVICE_1).resolve("/api/food");
         return new ResponseEntity<>(restTemplate.getForObject(backendUrl, List.class), HttpStatus.OK);
     }
 
     @PostMapping("/rtg/food")
     public ResponseEntity<FoodDTO> addFood(@RequestBody FoodDTO foodDTO) {
-        log.info("Request [POST] was executed on " + loadBalancer.choose("backend").getInstanceId());
+//        log.info("Request [POST] was executed on " + loadBalancer.choose("backend").getInstanceId());
         URI backendUrl = URI.create("http://" + BACKEND_SERVICE_ID).resolve("/api/food");
         ResponseEntity<FoodDTO> result =
             restTemplate.postForEntity(backendUrl, foodDTO, FoodDTO.class);
@@ -52,7 +52,7 @@ public class FoodController {
 
     @PutMapping("/rtg/food")
     public ResponseEntity<FoodDTO> updateFood(@RequestParam String uuid, @RequestBody FoodDTO foodDTO) {
-        log.info("Request [PUT] was executed on " + loadBalancer.choose("backend").getInstanceId());
+//        log.info("Request [PUT] was executed on " + loadBalancer.choose("backend").getInstanceId());
         URI backendUrl = URI.create("http://" + BACKEND_SERVICE_ID).resolve("/api/food?uuid=" + uuid);
         restTemplate.put(backendUrl, foodDTO);
         return new ResponseEntity<>(foodDTO, HttpStatus.OK);
@@ -60,7 +60,7 @@ public class FoodController {
 
     @DeleteMapping("/rtg/food")
     public ResponseEntity<String> deleteFood(@RequestParam String uuid) {
-        log.info("Request [DELETE] was executed on " + loadBalancer.choose("backend").getInstanceId());
+//        log.info("Request [DELETE] was executed on " + loadBalancer.choose("backend").getInstanceId());
         URI backendUrl = URI.create("http://" + BACKEND_SERVICE_ID).resolve("/api/food?uuid=" + uuid);
         restTemplate.delete(backendUrl);
         return new ResponseEntity<>(String
