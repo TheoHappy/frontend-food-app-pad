@@ -28,14 +28,16 @@ public class FoodController {
 
     private final RestTemplate restTemplate;
     private final LoadBalancerClient loadBalancer;
+    @GetMapping()
+    public ResponseEntity<String> test() {
+        return new ResponseEntity<>("FrontEnd Page", HttpStatus.OK);}
 
     @GetMapping("/rtg/food")
     @Cacheable(value = "foodInfo")
     public ResponseEntity<List<FoodDTO>> getAll() throws InterruptedException {
 //        Thread.sleep(7000);
         log.info("Request [GET] was executed on " + loadBalancer.choose("backend").getInstanceId());
-
-        URI backendUrl = URI.create("http://" + getSpecificUrl(loadBalancer.choose("backend").getInstanceId())).resolve("/api/food");
+        URI backendUrl = URI.create("http://" + BACKEND_SERVICE_ID).resolve("/api/food");
         return new ResponseEntity<>(restTemplate.getForObject(backendUrl, List.class), HttpStatus.OK);
     }
 
@@ -63,13 +65,5 @@ public class FoodController {
         restTemplate.delete(backendUrl);
         return new ResponseEntity<>(String
             .format("Food with uuid %s was succesfully deleted", uuid), HttpStatus.OK);
-    }
-
-    private String getSpecificUrl(String instance){
-        if (instance.equals("backend-instance-1")){
-            return BACKEND_SERVICE_1;
-        }else{
-            return BACKEND_SERVICE_2;
-        }
     }
 }
