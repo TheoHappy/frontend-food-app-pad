@@ -37,7 +37,7 @@ public class FoodController {
     public ResponseEntity<List<FoodDTO>> getAll() throws InterruptedException {
 //        Thread.sleep(7000);
         log.info("Request [GET] was executed on " + loadBalancer.choose("backend").getInstanceId());
-        URI backendUrl = URI.create("http://" + BACKEND_SERVICE_ID).resolve("/api/food");
+        URI backendUrl = URI.create("https://" + BACKEND_SERVICE_1).resolve("/api/food");
         return new ResponseEntity<>(restTemplate.getForObject(backendUrl, List.class), HttpStatus.OK);
     }
 
