@@ -23,6 +23,8 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class FoodController {
     public static final String BACKEND_SERVICE_ID = "backend";
+    public static final String BACKEND_SERVICE_1 = "be-food-instance1.herokuapp.com";
+    public static final String BACKEND_SERVICE_2 = "be-food-instance2.herokuapp.com";
 
     private final RestTemplate restTemplate;
     private final LoadBalancerClient loadBalancer;
@@ -30,9 +32,10 @@ public class FoodController {
     @GetMapping("/rtg/food")
     @Cacheable(value = "foodInfo")
     public ResponseEntity<List<FoodDTO>> getAll() throws InterruptedException {
-        Thread.sleep(7000);
+//        Thread.sleep(7000);
         log.info("Request [GET] was executed on " + loadBalancer.choose("backend").getInstanceId());
-        URI backendUrl = URI.create("http://" + BACKEND_SERVICE_ID).resolve("/api/food");
+
+        URI backendUrl = URI.create("http://" + getSpecificUrl(loadBalancer.choose("backend").getInstanceId())).resolve("/api/food");
         return new ResponseEntity<>(restTemplate.getForObject(backendUrl, List.class), HttpStatus.OK);
     }
 
@@ -60,5 +63,13 @@ public class FoodController {
         restTemplate.delete(backendUrl);
         return new ResponseEntity<>(String
             .format("Food with uuid %s was succesfully deleted", uuid), HttpStatus.OK);
+    }
+
+    private String getSpecificUrl(String instance){
+        if (instance.equals("backend-instance-1")){
+            return BACKEND_SERVICE_1;
+        }else{
+            return BACKEND_SERVICE_2;
+        }
     }
 }
