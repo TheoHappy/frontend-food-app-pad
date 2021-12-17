@@ -30,7 +30,7 @@ public class FoodController {
 //    private final LoadBalancerClient loadBalancer;
     @GetMapping()
     public ResponseEntity<String> test() {
-        return new ResponseEntity<>("FrontEnd Page", HttpStatus.OK);}
+        return new ResponseEntity<>("FrontEnd Page test push", HttpStatus.OK);}
 
     @GetMapping("/rtg/food")
     @Cacheable(value = "foodInfo")
